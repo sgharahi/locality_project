@@ -11,7 +11,9 @@ while(<A_FILE>){
 	my $a_data = $_;
 	my $v_data = <V_FILE>;
 	
-	my @values = split(';', $data);
-	print "$values[0]\n";	
+	my @values = split(';', $v_data);
+	my $n = scalar @values;
+	my $m = 1;
+	print "$n\n";	
 
 }
