@@ -146,7 +146,7 @@ VOID LoadMulti(ADDRINT addr, UINT32 size, UINT32 instId)
     const COUNTER counter = dl1Hit ? COUNTER_HIT : COUNTER_MISS;
     profile[instId][counter]++;
 
-    outFile << addr << ";";
+    outFile << addr << ",";
     if(!dl1Hit)
     {
         const BOOL l2Hit = l2->Access(addr, size, CACHE_BASE::ACCESS_TYPE_LOAD);
@@ -171,7 +171,7 @@ VOID StoreMulti(ADDRINT addr, UINT32 size, UINT32 instId)
     const COUNTER counter = dl1Hit ? COUNTER_HIT : COUNTER_MISS;
     profile[instId][counter]++;
 
-    outFile << addr << ";";
+    outFile << addr << ",";
     if(!dl1Hit)
     {
         const BOOL l2Hit = l2->Access(addr, size, CACHE_BASE::ACCESS_TYPE_STORE);
@@ -195,7 +195,7 @@ VOID LoadSingle(ADDRINT addr, UINT32 instId)
     const COUNTER counter = dl1Hit ? COUNTER_HIT : COUNTER_MISS;
     profile[instId][counter]++;
 
-    outFile << addr << ";";
+    outFile << addr << ",";
     if(!dl1Hit)
     {
         const BOOL l2Hit = l2->AccessSingleLine(addr, CACHE_BASE::ACCESS_TYPE_LOAD);
@@ -218,7 +218,7 @@ VOID StoreSingle(ADDRINT addr, UINT32 instId)
     const COUNTER counter = dl1Hit ? COUNTER_HIT : COUNTER_MISS;
     profile[instId][counter]++;
 
-    outFile << addr << ";";
+    outFile << addr << ",";
     if(!dl1Hit)
     {
         const BOOL l2Hit = l2->AccessSingleLine(addr, CACHE_BASE::ACCESS_TYPE_STORE);
@@ -237,7 +237,7 @@ VOID StoreSingle(ADDRINT addr, UINT32 instId)
 VOID LoadMultiFast(ADDRINT addr, UINT32 size)
 {
     const BOOL dl1Hit = dl1->Access(addr, size, CACHE_BASE::ACCESS_TYPE_LOAD);
-    outFile << addr << ";";
+    outFile << addr << ",";
     if(!dl1Hit)
     {
         if(!l2->Access(addr, size, CACHE_BASE::ACCESS_TYPE_LOAD))
@@ -253,7 +253,7 @@ VOID LoadMultiFast(ADDRINT addr, UINT32 size)
 VOID StoreMultiFast(ADDRINT addr, UINT32 size)
 {
     const BOOL dl1Hit = dl1->Access(addr, size, CACHE_BASE::ACCESS_TYPE_STORE);
-    outFile << addr << ";";
+    outFile << addr << ",";
     if(!dl1Hit)
     {
         if(!l2->Access(addr, size, CACHE_BASE::ACCESS_TYPE_STORE))
@@ -269,7 +269,7 @@ VOID StoreMultiFast(ADDRINT addr, UINT32 size)
 VOID LoadSingleFast(ADDRINT addr)
 {
     const BOOL dl1Hit = dl1->AccessSingleLine(addr, CACHE_BASE::ACCESS_TYPE_LOAD);    
-    outFile << addr << ";";
+    outFile << addr << ",";
     if(!dl1Hit)
     {
         if(!l2->AccessSingleLine(addr, CACHE_BASE::ACCESS_TYPE_LOAD))
@@ -285,7 +285,7 @@ VOID LoadSingleFast(ADDRINT addr)
 VOID StoreSingleFast(ADDRINT addr)
 {
     const BOOL dl1Hit = dl1->AccessSingleLine(addr, CACHE_BASE::ACCESS_TYPE_STORE);    
-    outFile << addr << ";";
+    outFile << addr << ",";
     if(!dl1Hit)
     {
         if(!l2->AccessSingleLine(addr, CACHE_BASE::ACCESS_TYPE_STORE))
