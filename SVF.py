@@ -2,6 +2,7 @@
 
 import math
 import numpy
+import sys
 
 v_sim = [[]]
 a_sim = [[]]
@@ -14,7 +15,20 @@ def gen_smat_a(int_a, int_b, i, j):
 
 def DTW(int_a, int_b):
     dtw = numpy.zeroes(len(int_a), len(int_b))
-    
+
+    for i in range(0, len(int_a)):
+        dtw[i][0] = sys.maxsize
+    for i in range(0, len(int_b)):
+        dtw[0][i] = sys.maxsize
+
+    dtw[0][0] = 0
+
+    for i in range(1, len(int_a)):
+        for j in range(1, len(int_b)):
+            cost = abs(int_a[i] - int_b[j])
+            dtw[i][j] = cost + min([dtw[i-1][j], dtw[i][j-1], dtw[i-1][j-1]])
+
+    return dtw[len(int_a)][len(int_b)]
 
 def SVF():
 
@@ -34,16 +48,12 @@ def main():
         for next in f:
             a_trace.extend(next)
 
-    i = 0
-    for v_int in v_trace:
+    for i in range(0, len(v_trace)):
         for j in range(0, len(v_trace)):
-        gen_smat(v_int, v_trace[j], i, j, v_sim)
-        j = j + 1
+            gen_smat_v(v_trace[i], v_trace[j], i, j, v_sim)
 
-    i = 0
-    for a_int in a_trace:
+    for i in range(0, len(a_trace)):
         for j in range(0, len(a_trace)):
-        gen_smat_a(a_int, a_trace[j], i, j, a_sim)
-        j = j + 1
+            gen_smat_a(a_trace[i], a_trace[j], i, j, a_sim)
 
 main()
