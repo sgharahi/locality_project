@@ -4,14 +4,20 @@ import math
 import numpy
 import sys
 
-v_sim = [[]]
-a_sim = [[]]
+v_sim
+a_sim
 
 def gen_smat_v(int_a, int_b, i, j):
-    v_sim[i][j] = DTW(int_a, int_b)
+    if(i > j):
+        v_sim[i][j] = DTW(int_a, int_b)
+    else:
+        v_sim[i][j] = 0
 
 def gen_smat_a(int_a, int_b, i, j):
-    a_sim[i][j] = abs(int_a - int_b)
+    if(i > j):
+        a_sim[i][j] = abs(int_a - int_b)
+    else
+        a_sim[i][j] = 0
 
 def DTW(int_a, int_b):
     dtw = numpy.zeroes(len(int_a), len(int_b))
@@ -31,6 +37,18 @@ def DTW(int_a, int_b):
     return dtw[len(int_a)][len(int_b)]
 
 def SVF():
+    v_mean = numpy.mean(v_sim)
+    a_mean = numpy.mean(a_sim)
+    v_std = numpy.std(v_sim)
+    a_std = numpy.std(a_sim)
+
+    sum = 0
+    for i in range(0, min(len(v_sim), len(a_sim))):
+        for j in range(0, min(len(v_sim[0]), len(a_sim[0]))):
+            sum += (v_sim[i][j] - v_mean)*(a_sim[i][j] - a_avg)
+
+    sum /= (v_std * a_std)
+    return sum
 
 def main():
     v_trace = [[]]
@@ -47,6 +65,9 @@ def main():
     with open(a_file) as f:
         for next in f:
             a_trace.extend(next)
+
+    v_sim = numpy.zeroes(len(v_trace), len(v_trace))
+    a_sim = numpy.zeroes(len(a_trace), len(a_trace))
 
     for i in range(0, len(v_trace)):
         for j in range(0, len(v_trace)):
