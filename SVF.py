@@ -17,12 +17,12 @@ def gen_smat_a(int_a, int_b, i, j, a_sim):
         a_sim[i][j] = 0
 
 def DTW(int_a, int_b):
-    dtw = np.zeroes(len(int_a), len(int_b))
+    dtw = np.zeros((len(int_a), len(int_b)))
 
     for i in range(0, len(int_a)):
-        dtw[i][0] = sys.maxsize
-    for i in range(0, len(int_b)):
         dtw[0][i] = sys.maxsize
+    for i in range(0, len(int_b)):
+        dtw[i][0] = sys.maxsize
 
     dtw[0][0] = 0
 
@@ -56,23 +56,28 @@ def main():
 
     with open(v_file) as f:
         for line in f:
-            next = line.split(" ")
+            next = line.strip().split(" ")
+            temp = []
             for item in next:
-                v_trace.append(int(item))
+                temp.append(int(item))
+            v_trace.append(temp)
     
     with open(a_file) as f:
         for next in f:
             a_trace.append(int(next))
 
+    print len(v_trace)
+    print len(a_trace)
+
     v_sim = np.zeros((len(v_trace), len(v_trace)))
     a_sim = np.zeros((len(a_trace), len(a_trace)))
 
     for i in range(0, len(v_trace)):
-        for j in range(0, len(v_trace[0])):
+        for j in range(0, len(v_trace)):
             gen_smat_v(v_trace[i], v_trace[j], i, j, v_sim)
 
     for i in range(0, len(a_trace)):
-        for j in range(0, len(a_trace[0])):
+        for j in range(0, len(a_trace)):
             gen_smat_a(a_trace[i], a_trace[j], i, j, a_sim)
 
     print SVF(v_sim, a_sim)
