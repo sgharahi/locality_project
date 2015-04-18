@@ -1,11 +1,11 @@
 #! /usr/bin/python
 
 import math
-import numpy
+import numpy as np
 import sys
 
-v_sim
-a_sim
+v_sim = []
+a_sim = []
 
 def gen_smat_v(int_a, int_b, i, j):
     if(i > j):
@@ -16,11 +16,11 @@ def gen_smat_v(int_a, int_b, i, j):
 def gen_smat_a(int_a, int_b, i, j):
     if(i > j):
         a_sim[i][j] = abs(int_a - int_b)
-    else
+    else:
         a_sim[i][j] = 0
 
 def DTW(int_a, int_b):
-    dtw = numpy.zeroes(len(int_a), len(int_b))
+    dtw = np.zeroes(len(int_a), len(int_b))
 
     for i in range(0, len(int_a)):
         dtw[i][0] = sys.maxsize
@@ -37,15 +37,15 @@ def DTW(int_a, int_b):
     return dtw[len(int_a)][len(int_b)]
 
 def SVF():
-    v_mean = numpy.mean(v_sim)
-    a_mean = numpy.mean(a_sim)
-    v_std = numpy.std(v_sim)
-    a_std = numpy.std(a_sim)
+    v_mean = np.mean(v_sim)
+    a_mean = np.mean(a_sim)
+    v_std = np.std(v_sim)
+    a_std = np.std(a_sim)
 
     sum = 0
     for i in range(0, min(len(v_sim), len(a_sim))):
         for j in range(0, min(len(v_sim[0]), len(a_sim[0]))):
-            sum += (v_sim[i][j] - v_mean)*(a_sim[i][j] - a_avg)
+            sum += (v_sim[i][j] - v_mean)*(a_sim[i][j] - a_mean)
 
     sum /= (v_std * a_std)
     return sum
@@ -66,15 +66,17 @@ def main():
         for next in f:
             a_trace.extend(next)
 
-    v_sim = numpy.zeroes(len(v_trace), len(v_trace))
-    a_sim = numpy.zeroes(len(a_trace), len(a_trace))
+    v_sim = np.zeros((len(v_trace), len(v_trace)))
+    a_sim = np.zeros((len(a_trace), len(a_trace)))
 
     for i in range(0, len(v_trace)):
         for j in range(0, len(v_trace)):
-            gen_smat_v(v_trace[i], v_trace[j], i, j, v_sim)
+            gen_smat_v(v_trace[i], v_trace[j], i, j)
 
     for i in range(0, len(a_trace)):
         for j in range(0, len(a_trace)):
-            gen_smat_a(a_trace[i], a_trace[j], i, j, a_sim)
+            gen_smat_a(a_trace[i], a_trace[j], i, j)
+
+    SVF()
 
 main()
