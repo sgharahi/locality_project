@@ -18,8 +18,6 @@ def attacker_sim_mat(interval_a, interval_b, i, j, a_sim):
 
 def DTW(interval_a, interval_b):
     dtw = np.zeros((len(interval_a), len(interval_b)))
-    print interval_a
-    print interval_b
 
     for i in range(0, len(interval_a)):
         dtw[i][0] = sys.maxsize
@@ -33,7 +31,7 @@ def DTW(interval_a, interval_b):
             cost = abs(interval_a[i] - interval_b[j])
             dtw[i][j] = cost + min([dtw[i-1][j], dtw[i][j-1], dtw[i-1][j-1]])
 
-    return dtw[len(interval_a)][len(interval_b)]
+    return dtw[len(interval_a) - 1][len(interval_b) - 1]
 
 def SVF(v_sim, a_sim):
     v_mean = np.mean(v_sim)
@@ -50,21 +48,23 @@ def SVF(v_sim, a_sim):
     return sum
 
 def main():
-    v_trace = [[]]
+    v_trace = []
     a_trace = []
     
     v_file = "mem_trace.out"
     a_file = "dcache_trace.out"
 
+    # 
     with open(v_file) as f:
         for line in f:
             next = line.strip().split(" ")
             temp = []
             for item in next:
                 temp.append(int(item))
+
             temp = filter(None, temp)
             v_trace.append(temp)
-    
+
     with open(a_file) as f:
         for next in f:
             a_trace.append(int(next))
@@ -75,14 +75,20 @@ def main():
     v_sim = np.zeros((len(v_trace), len(v_trace)))
     a_sim = np.zeros((len(a_trace), len(a_trace)))
 
+    print "Generating victim similarity matrix"
+
     for i in range(0, len(v_trace)):
         for j in range(0, len(v_trace)):
             victim_sim_mat(v_trace[i], v_trace[j], i, j, v_sim)
+
+    print "Generating attacker similarity matrix"
 
     for i in range(0, len(a_trace)):
         for j in range(0, len(a_trace)):
             attacker_sim_mat(a_trace[i], a_trace[j], i, j, a_sim)
 
-    print SVF(v_sim, a_sim)
+    print "Computing SVF"
+    ret = SVF(v_sim, a_sim)
+    print ret
 
 main()
