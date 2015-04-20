@@ -2,21 +2,20 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <string>
-#include <vector>
+#include <thrust/device_vectorh>
 #include <string.h>
 
-using namespace std;
+using namespace thrust;
 
-//void SVF(int** v_simMat, int** a_simMat);
-//void genSimilarityMatrix(int* interval_a, int* interval_b, int* p_simMat);
+cudaSVF(device_vector<device_vector<int>> v_trace, device_vector<int> a_trace);
 
 int main(int argc, char** argv)
 {
-    vector<vector<int>> v_sim;
-    vector<vector<int>> a_sim;
+    device_vector<device_vector<int>> v_sim;
+    device_vector<device_vector<int>> a_sim;
 
-    vector<vector<int>> v_trace;
-    vector<int> a_trace;
+    device_vector<vector<int>> v_trace;
+    device_vector<int> a_trace;
     
     FILE *v_fp, *a_fp;
 
@@ -29,7 +28,7 @@ int main(int argc, char** argv)
 
     while((read = getLine(&line, &len, v_fp)) != -1)
     {
-        vector<int> interval;
+        device_vector<int> interval;
         char* token = strtok(line, " ");
         while(token)
         {
@@ -44,7 +43,11 @@ int main(int argc, char** argv)
         a_trace.push_back(atoi(line));
     }
 
+    
+
     free(line);
+
+    
 
     return 0;
 }

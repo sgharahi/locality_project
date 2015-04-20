@@ -69,9 +69,6 @@ def main():
         for next in f:
             a_trace.append(int(next))
 
-    print len(v_trace)
-    print len(a_trace)
-
     v_sim = np.zeros((len(v_trace), len(v_trace)))
     a_sim = np.zeros((len(a_trace), len(a_trace)))
 
