@@ -7,8 +7,7 @@
 #include <cuda_runtime.h>
 #include <driver_functions.h>
 
-void
-CudaRenderer::render() {
+void SVF() {
 
     int size = imageWidth * imageHeight;
 
@@ -24,6 +23,3 @@ CudaRenderer::render() {
     cudaThreadSynchronize();
 }
 
-void main()
-{
-}
