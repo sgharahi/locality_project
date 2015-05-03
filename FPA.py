@@ -19,7 +19,6 @@ def DTW(hist_a, hist_b):
     return dtw[len(hist_a) - 1][len(hist_b) - 1]
 
 
-
 # TODO - Find out \Delta_2(Q) (L2 sensitivity of Q)
 # by running DTW on set of input histograms
 def l2_sensitivity(Q):
