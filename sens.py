@@ -20,3 +20,5 @@ def sensitivity(files):
             if(out > max):
                 max = out
     return max
+
+sensitivity(sys.argv[1])
