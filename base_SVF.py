@@ -23,7 +23,7 @@ def abs_diff(a, b):
 # Path of least resistance gives the resulting distance
 def DTW(interval_a, interval_b):
 
-    return numpy.linalg.norm(interval_a - interval_b)
+    #return interval_a[0] - interval_b[0]
     
     dtw = np.zeros((len(interval_a), len(interval_b)))
 
