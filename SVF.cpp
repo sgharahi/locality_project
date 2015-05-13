@@ -8,7 +8,6 @@
 using namespace std;
 
 /* Constants and Macros */
-#define ABS(x) (x > 0 ? x : -x)
 #define MIN(x,y) (x < y ? x : y)
 
 /* Check arguments to the program
@@ -23,15 +22,15 @@ void check_usage(int argc, char* p)
     }
 }
 
-void init_sim(int64_t** &v, int64_t** &a, int len)
+void init_sim(int64_t*** v, int64_t*** a, int len)
 {
-    a = (int64_t**) malloc(sizeof(int64_t*) * len);
-    v = (int64_t**) malloc(sizeof(int64_t*) * len);
+    *a = (int64_t**) malloc(sizeof(int64_t*) * len);
+    *v = (int64_t**) malloc(sizeof(int64_t*) * len);
 
     for(int i = 0; i < len; i++)
     {
-        v[i] = (int64_t*) malloc(sizeof(int64_t) * len);
-        a[i] = (int64_t*) malloc(sizeof(int64_t) * len);
+        (*v)[i] = (int64_t*) malloc(sizeof(int64_t) * len);
+        (*a)[i] = (int64_t*) malloc(sizeof(int64_t) * len);
     }
 }
 
@@ -42,16 +41,16 @@ void fill_vectors(vector<vector<int64_t> > &v_trace, vector<vector<int64_t> > &a
     FILE* vfp = fopen(v_file, "r");
     FILE* afp = fopen(a_file, "r");
     int sentinel = 1;
+    char* buff = (char*) malloc(sizeof(char) * 100000);
 
     // Loop through file to create trace vectors
     while(sentinel)
     {
         // Line buffer
-        char buff[16384];
         char* end;
 
         // Tokenize each line into an array to be added to v_trace
-        sentinel = (fgets(buff, 16384, vfp) != NULL);
+        sentinel = (fgets(buff, 100000, vfp) != NULL);
         char* next_int = strtok(buff, " ");
         vector<int64_t> v;
         while(next_int)
@@ -64,7 +63,7 @@ void fill_vectors(vector<vector<int64_t> > &v_trace, vector<vector<int64_t> > &a
         v_trace.push_back(v);
 
         // Tokenize each line into an array to be added to v_trace
-        sentinel &= (fgets(buff, 16384, afp) != NULL);
+        sentinel &= (fgets(buff, 100000, afp) != NULL);
         next_int = strtok(buff, " ");
         vector<int64_t> a;
         while(next_int)
@@ -78,16 +77,17 @@ void fill_vectors(vector<vector<int64_t> > &v_trace, vector<vector<int64_t> > &a
     }
     fclose(vfp);
     fclose(afp);
+    free(buff);
 }
 
 // Generate similarity matrix from intervals
 void gen_sim(int64_t** v_sim, int64_t** a_sim, vector<vector<int64_t> > &v, vector<vector<int64_t> > &a)
 {
-    // Calculte the victim similarity based on DTW algorithm
+    // Calculate the victim similarity based on DTW algorithm
     for(int i = 0; i < v.size(); i++)
         for(int j = 0; j < v.size(); j++)
             if(i < j)
-                v_sim[i][j] = DTW(v[i], v[j]);
+                v_sim[i][j] = (int64_t)DTW(v[i], v[j]);
             else
                 v_sim[i][j] = 0;
 
@@ -95,7 +95,7 @@ void gen_sim(int64_t** v_sim, int64_t** a_sim, vector<vector<int64_t> > &v, vect
     for(int i = 0; i < a.size(); i++)
         for(int j = 0; j < a.size(); j++)
             if(i < j)
-                a_sim[i][j] = DTW(a[i], a[j]);
+                a_sim[i][j] = (int64_t)DTW(a[i], a[j]);
             else
                 a_sim[i][j] = 0;
 }
@@ -109,7 +109,7 @@ double SVF(int64_t** &v, int v_len, int64_t** &a, int a_len)
 {
     double  v_mean, a_mean,
             v_std, a_std;
-    
+
     v_mean = _mean(v, v_len, v_len);
     a_mean = _mean(a, a_len, a_len);
 
@@ -121,10 +121,16 @@ double SVF(int64_t** &v, int v_len, int64_t** &a, int a_len)
 
     for(int i = 0; i < bound; i++)
         for(int j = 0; j < bound; j++)
-            sum += (v[i][j] * v[i][j]);
+            sum += (v[i][j] * a[i][j]);
+
+    printf("Sum: %f\n", sum);
+    printf("v_mean: %f\n", v_mean);
+    printf("v_std: %f\n", v_std);
+    printf("a_mean: %f\n", a_mean);
+    printf("a_std: %f\n", a_std);
 
     sum -= (v_len * a_len * v_mean * a_mean);
-    double svf = sum / ((v_len * a_len - 1) * v_std * a_std);
+    double svf = sum / (v_std * a_std);
     return svf;
 }
 
@@ -142,7 +148,7 @@ int main(int argc, char* argv[])
     fill_vectors(v_trace, a_trace, argv[1], argv[2]);
 
     // Initialize Similarity matrices
-    init_sim(v_sim, a_sim, v_trace.size());
+    init_sim(&v_sim, &a_sim, v_trace.size());
 
     // Generate similarity matrices by comparing interval distances
     printf("Generating similarity matrices.\n");
@@ -152,6 +158,6 @@ int main(int argc, char* argv[])
     printf("Computing correlation.\n");
     double result = SVF(v_sim, v_trace.size(), a_sim, a_trace.size());
 
-    printf("Computed SVF: %f\n", result);
+    printf("Computed SVF: %f\n", ABS(result));
 }
 

@@ -6,7 +6,7 @@
 
 #define MIN3(a,b,c) (a < b ? (a < c ? a : c) : (b < c ? b : c))
 #define MIN2(a,b) (a < b ? a : b)
-#define ABS(a) (a > 0 ? a : -a)
+#define ABS(x) ((x)<0 ? -(x) : (x))
 
 /* C implementation of normalized Dynamic Time Warping Algorithm
  * @input:  len1, the length of first list,
@@ -15,7 +15,7 @@
  *          list2, the second list
  * @return: integer representing distance between vectors
  */
-double DTW(const std::vector<int64_t> &list_a, const std::vector<int64_t> &list_b)
+int64_t DTW(const std::vector<int64_t> &list_a, const std::vector<int64_t> &list_b)
 {
     // Local variables
     int len1 = list_a.size(), len2 = list_b.size();
@@ -36,7 +36,9 @@ double DTW(const std::vector<int64_t> &list_a, const std::vector<int64_t> &list_
         for(int j = 1; j < len2; j++)
             dtw[i][j] = ABS(list_a[i] - list_b[j]) + MIN3(dtw[i-1][j], dtw[i][j-1], dtw[i-1][j-1]);
     
-    return ((double)dtw[len1 -1][len2 - 1]) / MIN2(len1, len2);
+    int64_t ret = dtw[len1 -1][len2 - 1] / MIN2(len1, len2);
+    free(dtw);
+    return ret;
 }
 
 #endif //__DTW_H__
