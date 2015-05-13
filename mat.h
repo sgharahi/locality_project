@@ -5,7 +5,7 @@
 
 double _std(int64_t** &mat, int d1, int d2, double mean)
 {
-    double st;
+    double st = 0;
 
     for(int i = 0; i < d1; i++)
         for(int j = 0; j < d2; j++)
@@ -20,7 +20,7 @@ double _mean(int64_t** &mat, int d1, int d2)
     double len = d1 * d2;
     for(int i = 0; i < d1; i++)
         for(int j = 0; j < d2; j++)
-            sum += (mat[i][j] / len);
+            sum += (mat[i][j] / (len));
 
     return sum;
 }
