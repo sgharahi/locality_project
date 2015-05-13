@@ -25,10 +25,6 @@ def DTW(hist_a, hist_b):
     return dtw[len(hist_a) - 1][len(hist_b) - 1] / (len(hist_a)*len(hist_b))
 
 
-# TODO - Find out \Delta_2(Q) (L2 sensitivity of Q)
-# by running DTW on set of input histograms. Call sensitivity.py for this
-def l2_sensitivity():
-    return 50000
 
 # Determine the "distance" between 2 stride freq histograms
 def dist(hist_a, hist_b):
@@ -51,12 +47,10 @@ def done(old_cent, new_cent, iterations, max_iterations):
 # Assign labels to each histogram based on distance from centers
 def getLabels(F, centers, labels):
     for k in range(0, len(F)):
-        #min = dist(F[k], centers[0])
-        min = abs(F[k][0] - centers[0][0])
+        min = dist(F[k], centers[0])
         index = 0
         for i in range(1, len(centers)):
-            #d = dist(F[k], centers[i])
-            d = abs(F[k][0] - centers[i][0])
+            d = dist(F[k], centers[i])
             if(d <= min):
                 min = d
                 index = i
@@ -120,30 +114,36 @@ def cluster(F, num_clust, max_iter):
         #print labels
 
     # Return the centers - the averages of each phase type
-    return cent
+    return [cent, labels]
 
 def main():
     # Read in data
     F = []
-    with open ('input.txt') as file:
+    with open ('stride_trace.out') as file:
         temp = []
         for line in file:
             temp.append(int(line))
             # Size of histogram
-            if(len(temp) >= 6):
+            if(len(temp) >= 17):
                 F.append(copy.deepcopy(temp))
                 temp = []
 
     # Phase clustering
     # Group like phases together to get overall behavior
-    avgs = cluster(F, 8, 10) # 8 clusters, 10 iterations
+    avgs, labels = cluster(F, 8, 10) # 8 clusters, 10 iterations
 
     # Define constants
     # size of histrogram x-axis
     k = len(avgs)
+
     # privacy level
     epsilon = 1
-    _lambda = math.sqrt(k) * l2_sensitivity() / epsilon
+
+    # Find out \Delta_2(Q) (L2 sensitivity of Q)
+    # by running DTW on set of input histograms. Call sensitivity.py for this
+    #Q = sensitivity([file])
+    Q = 50000
+    _lambda = math.sqrt(k) * Q / epsilon
     
     output = []
     # Iterate through the phase averages
@@ -165,5 +165,6 @@ def main():
         # TODO: What if probabilities are negative??
 
     print output
+    print labels
 
 main()
