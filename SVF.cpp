@@ -121,15 +121,7 @@ double SVF(int64_t** &v, int v_len, int64_t** &a, int a_len)
 
     for(int i = 0; i < bound; i++)
         for(int j = 0; j < bound; j++)
-        {
             sum += (v[i][j] * a[i][j]);
-            printf("v[%d][%d]: %lld\t a[%d][%d]: %lld\n", i, j, v[i][j], i, j, a[i][j]);
-        }
-    printf("Sum: %f\n", sum);
-    printf("v_mean: %f\n", v_mean);
-    printf("v_std: %f\n", v_std);
-    printf("a_mean: %f\n", a_mean);
-    printf("a_std: %f\n", a_std);
 
     sum -= (v_len * a_len * v_mean * a_mean);
     double svf = sum / (v_std * a_std);
