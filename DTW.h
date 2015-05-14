@@ -9,9 +9,7 @@
 #define ABS(x) ((x)<0 ? -(x) : (x))
 
 /* C implementation of normalized Dynamic Time Warping Algorithm
- * @input:  len1, the length of first list,
- *          len2, the length of second list,
- *          list1, the first list
+ * @input:  list1, the first list
  *          list2, the second list
  * @return: integer representing distance between vectors
  */
