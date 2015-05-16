@@ -17,8 +17,12 @@ double L2(const std::vector<int64_t> &list_a, const std::vector<int64_t> &list_b
     // Local variables
     int len1 = list_a.size(), len2 = list_b.size();
     if(len1 != len2){
-        fprintf(stderr, "Vector length mismatch. Aborting.\n");
-        exit(1);
+        //fprintf(stderr, "Vector length mismatch. Aborting.\n");
+        //exit(1);
+        if(len1 < len2)
+            len2 = len1;
+        else
+            len1 = len2;
     }
 
     double sum = 0;
