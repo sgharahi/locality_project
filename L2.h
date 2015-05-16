@@ -12,7 +12,7 @@
  *          list2, the second list
  * @return: integer representing L2 distance between vectors
  */
-double L2(const std::vector<int64_t> &list_a, const std::vector<int64_t> &list_b)
+int64_t L2(const std::vector<int64_t> &list_a, const std::vector<int64_t> &list_b)
 {
     // Local variables
     int len1 = list_a.size(), len2 = list_b.size();
@@ -25,10 +25,10 @@ double L2(const std::vector<int64_t> &list_a, const std::vector<int64_t> &list_b
             len1 = len2;
     }
 
-    double sum = 0;
+    int64_t sum = 0;
     for(int i = 0; i < len1; i++)
         sum += (sqr(list_a[i]) - sqr(list_b[i]));
-    sum = sqrt(sum);
+    sum = (int64_t)sqrt(sum);
     return sum;
 }
 
